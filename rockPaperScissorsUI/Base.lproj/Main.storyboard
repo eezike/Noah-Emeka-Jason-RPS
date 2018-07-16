@@ -40,6 +40,9 @@
                                                     <constraint firstAttribute="width" constant="100" id="lYK-s6-oau"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="rock"/>
+                                                <connections>
+                                                    <action selector="rButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6sc-lU-4KU"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N1K-GC-Yfl">
                                                 <rect key="frame" x="129" y="75" width="100" height="100"/>
@@ -48,6 +51,9 @@
                                                     <constraint firstAttribute="height" constant="100" id="ipX-Cu-CBb"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="paper"/>
+                                                <connections>
+                                                    <action selector="pButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="COZ-Jc-bcs"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rHv-4M-GOg">
                                                 <rect key="frame" x="251" y="75" width="100" height="100"/>
@@ -58,6 +64,9 @@
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="nZF-wQ-F5d"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="scissors"/>
+                                                <connections>
+                                                    <action selector="sButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hWC-57-OEL"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -70,6 +79,11 @@
                                             <constraint firstAttribute="trailing" secondItem="rHv-4M-GOg" secondAttribute="trailing" constant="8" id="Ywe-6i-pZg"/>
                                             <constraint firstItem="N1K-GC-Yfl" firstAttribute="centerX" secondItem="x6P-My-fNi" secondAttribute="centerX" id="hds-Lr-aKn"/>
                                         </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crQ-1r-t5n">
                                         <rect key="frame" x="8" y="301" width="359" height="250"/>
@@ -89,6 +103,11 @@
                                             <constraint firstAttribute="height" constant="250" id="pez-29-sBd"/>
                                             <constraint firstItem="Q4J-hf-D7M" firstAttribute="centerY" secondItem="crQ-1r-t5n" secondAttribute="centerY" id="w3i-MI-aNa"/>
                                         </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rn3-dy-ScQ">
                                         <rect key="frame" x="87" y="229" width="200" height="100"/>
@@ -98,9 +117,12 @@
                                             <constraint firstAttribute="height" constant="100" id="lSf-i3-TVO"/>
                                         </constraints>
                                         <state key="normal" title="Button" image="ready"/>
+                                        <connections>
+                                            <action selector="readyButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ORr-oJ-Awu"/>
+                                        </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" red="1" green="0.74811342160000005" blue="0.19233048389999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="1" green="0.54783499901111121" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="x6P-My-fNi" firstAttribute="leading" secondItem="JY7-6m-BhX" secondAttribute="leading" constant="8" id="3xq-Qt-2T4"/>
                                     <constraint firstItem="x6P-My-fNi" firstAttribute="top" secondItem="JY7-6m-BhX" secondAttribute="top" constant="8" id="7WW-1E-WN9"/>
@@ -124,6 +146,12 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="bgView" destination="JY7-6m-BhX" id="hU2-6A-KRG"/>
+                        <outlet property="paperButton" destination="N1K-GC-Yfl" id="Iyo-pa-96g"/>
+                        <outlet property="rockButton" destination="zbO-8k-Czu" id="X6Z-2b-6zb"/>
+                        <outlet property="scissorsButton" destination="rHv-4M-GOg" id="yoc-DQ-BPY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
