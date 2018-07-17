@@ -51,18 +51,20 @@ public class DataManager {
         }
     }
     
-    static func loadData (_ fileName:String) -> Data? {
-        let url = getDocumentDirectory().appendingPathComponent(fileName, isDirectory: false)
-        if !FileManager.default.fileExists(atPath: url.path) {
-            fatalError("File not found at path \(url.path)")
-        }
-        
-        if let data = FileManager.default.contents(atPath: url.path) {
-            return data
-        }else{
-            fatalError("Data unavailable at path \(url.path)")
-        }
-    }
+//    static func loadData (_ fileName:String) -> Data? {
+//        let url = getDocumentDirectory().appendingPathComponent(fileName, isDirectory: false)
+//        if !FileManager.default.fileExists(atPath: url.path) {
+//            fatalError("File not found at path \(url.path)")
+//        }
+//
+//        if let data = FileManager.default.contents(atPath: url.path) {
+//            return data
+//        }else{
+//            fatalError("Data unavailable at path \(url.path)")
+//        }
+//        let data: Data = nil
+//        reutrn data
+//    }
     
     static func loadAll <T:Decodable> (_ type:T.Type) -> [T] {
         

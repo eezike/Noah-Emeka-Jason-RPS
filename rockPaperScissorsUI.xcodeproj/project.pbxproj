@@ -15,7 +15,6 @@
 		4F88F9FE20FD20D3009BC3B3 /* rockPaperScissorsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88F9FD20FD20D3009BC3B3 /* rockPaperScissorsUITests.swift */; };
 		4F88FA0920FD20D3009BC3B3 /* rockPaperScissorsUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88FA0820FD20D3009BC3B3 /* rockPaperScissorsUIUITests.swift */; };
 		4F88FA1720FD4AE4009BC3B3 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88FA1620FD4AE4009BC3B3 /* StartViewController.swift */; };
-		4F88FA1920FD98D0009BC3B3 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88FA1820FD98D0009BC3B3 /* DataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +49,6 @@
 		4F88FA0820FD20D3009BC3B3 /* rockPaperScissorsUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rockPaperScissorsUIUITests.swift; sourceTree = "<group>"; };
 		4F88FA0A20FD20D3009BC3B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4F88FA1620FD4AE4009BC3B3 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
-		4F88FA1820FD98D0009BC3B3 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +101,6 @@
 			children = (
 				4F88F9E820FD20CE009BC3B3 /* AppDelegate.swift */,
 				4F88F9EA20FD20CE009BC3B3 /* ViewController.swift */,
-				4F88FA1820FD98D0009BC3B3 /* DataManager.swift */,
 				4F88F9EC20FD20CE009BC3B3 /* Main.storyboard */,
 				4F88FA1620FD4AE4009BC3B3 /* StartViewController.swift */,
 				4F88F9EF20FD20D2009BC3B3 /* Assets.xcassets */,
@@ -263,7 +260,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F88F9EB20FD20CE009BC3B3 /* ViewController.swift in Sources */,
-				4F88FA1920FD98D0009BC3B3 /* DataManager.swift in Sources */,
 				4F88F9E920FD20CE009BC3B3 /* AppDelegate.swift in Sources */,
 				4F88FA1720FD4AE4009BC3B3 /* StartViewController.swift in Sources */,
 			);
@@ -438,8 +434,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = P4ZD4APHU4;
+				DEVELOPMENT_TEAM = 4HNR6Y8RAD;
 				INFOPLIST_FILE = rockPaperScissorsUI/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -447,6 +444,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Noah-Rubin.rockPaperScissorsUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -456,8 +454,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = P4ZD4APHU4;
+				DEVELOPMENT_TEAM = 4HNR6Y8RAD;
 				INFOPLIST_FILE = rockPaperScissorsUI/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -465,6 +464,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Noah-Rubin.rockPaperScissorsUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

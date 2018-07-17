@@ -20,15 +20,23 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
      scissors are 2
      */
     
-    @IBOutlet weak var rockButton: UIButton!
     
+    @IBOutlet weak var opponentImage: UIImageView!
+    
+    @IBOutlet weak var rockButton: UIButton!
     @IBOutlet weak var scissorsButton: UIButton!
     @IBOutlet weak var paperButton: UIButton!
     
     let moveNames = ["Rock", "Paper", "Scissor"]
     
     var player1: Int = 10
-    var player2: Int = 1 //11
+    var player2: Int = 10 //11
+    var opponentImgVar = #imageLiteral(resourceName: "transparent-square-tiles")
+    var meReady = false
+    var counter = 0
+    //var rock2 = #imageLiteral(resourceName: "rock")
+    //var paper2 = #imageLiteral(resourceName: "paper")
+    //var scissors2 = #imageLiteral(resourceName: "scissors")
     
     var peerID:MCPeerID!
     var mcSession:MCSession!
@@ -59,23 +67,63 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         
     }
     
-
     @IBAction func readyButton(_ sender: Any) {
-        checkForWinner()
+        let message = "".data(using: String.Encoding.utf8, allowLossyConversion: false)
+        let _: NSError?
+        do{
+            try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+        }
+        catch{
+            print ("Error sending data")
+        }
+        print("Self: \(player1)")
+        print("P2: \(player2)")
+        meReady = true
+        switch player1{
+        case 0:
+            sendChoice(#imageLiteral(resourceName: "rock"))
+        case 1:
+            sendChoice(#imageLiteral(resourceName: "paper"))
+        case 2:
+            sendChoice(#imageLiteral(resourceName: "scissors"))
+        default: break
+        }
+        
+        
+        if(player1 != 10){
+            opponentImage.image = opponentImgVar
+            print("Image: \(opponentImgVar) Is Eq: \(#imageLiteral(resourceName: "rock"))")
+            if(opponentImgVar.isEqual(UIImagePNGRepresentation(#imageLiteral(resourceName: "rock")))){ player2 = 0}
+            else if(opponentImgVar.isEqual(UIImagePNGRepresentation(#imageLiteral(resourceName: "paper")))){ player2 = 1}
+            else if(opponentImgVar.isEqual(UIImagePNGRepresentation(#imageLiteral(resourceName: "scissors")))){ player2 = 2}
+            else{ player2 = 100}
+//            switch opponentImgVar{
+//            case #imageLiteral(resourceName: "rock"):
+//                player2 = 0
+//            case #imageLiteral(resourceName: "paper"):
+//                player2 = 1
+//            case #imageLiteral(resourceName: "scissors"):
+//                player2 = 2
+//            default: player2 = 100
+//            }
+            print("Self: \(player1)")
+            print("P2: \(player2)")
+            checkForWinner()
+        }
     }
-    
-    
-    
+
     func winAlert(msg: String)
     {
+        meReady = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1)
         {
             let alert = UIAlertController(title: msg, message: nil, preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
-            self.player1 = 10
+            self.player2 = 10
         }
+        opponentImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
         
     }
     
@@ -101,11 +149,11 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         }
     }
     
-    func sendChoice (_ choice: String) {
+    func sendChoice (_ img: UIImage) {
         if mcSession.connectedPeers.count > 0 {
-            if let choice1 = DataManager.loadData(choice) {
+            if let imageData =  UIImagePNGRepresentation(img){
                 do {
-                    try mcSession.send(choice1, toPeers: mcSession.connectedPeers, with: .reliable)
+                    try mcSession.send(imageData, toPeers: mcSession.connectedPeers, with: .reliable)
                 }catch{
                     fatalError("Could not send todo item")
                 }
@@ -115,17 +163,22 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         }
     }
     
+    
+    
+    
+    
+ 
     @IBAction func showConnectivityActions(_ sender: Any) {
-        let actionSheet = UIAlertController(title: "New Game!", message: "Do you want to Host or Join a session?", preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: "RPS Game!", message: "Do you want to Host or Join a game?", preferredStyle: .actionSheet)
         
-        actionSheet.addAction(UIAlertAction(title: "Host Session", style: .default, handler: { (action:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "Host Game", style: .default, handler: { (action:UIAlertAction) in
             
             self.mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "ba-td", discoveryInfo: nil, session: self.mcSession)
             self.mcAdvertiserAssistant.start()
             
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Join Session", style: .default, handler: { (action:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "Join Game", style: .default, handler: { (action:UIAlertAction) in
             let mcBrowser = MCBrowserViewController(serviceType: "ba-td", session: self.mcSession)
             mcBrowser.delegate = self
             self.present(mcBrowser, animated: true, completion: nil)
@@ -152,18 +205,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         
-        do {
-            let choice = try JSONDecoder().decode(String.self, from: data)
-            
-            DataManager.save(choice, with: choice)
-            
-            DispatchQueue.main.async {
-                self.player2 = Int(choice)!
-                self.checkForWinner()
-            }
-            
-        }catch{
-            fatalError("Unable to process recieved data")
+        DispatchQueue.main.async {
+            let msg = NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue)
         }
         
     }
@@ -190,16 +233,16 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadData()
         
         peerID = MCPeerID(displayName: UIDevice.current.name)
         mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required)
         mcSession.delegate = self
+        opponentImage.image = opponentImgVar
+        counter = 0
         // Do any additional setup after loading the view, typically from a nib.
     }
     
-    func loadData(){
-    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

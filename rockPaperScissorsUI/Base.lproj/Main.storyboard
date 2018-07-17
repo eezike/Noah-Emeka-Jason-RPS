@@ -278,6 +278,7 @@
                     </view>
                     <connections>
                         <outlet property="bgView" destination="JY7-6m-BhX" id="hU2-6A-KRG"/>
+                        <outlet property="opponentImage" destination="Q4J-hf-D7M" id="Xnx-tc-t9J"/>
                         <outlet property="paperButton" destination="N1K-GC-Yfl" id="Iyo-pa-96g"/>
                         <outlet property="rockButton" destination="zbO-8k-Czu" id="X6Z-2b-6zb"/>
                         <outlet property="scissorsButton" destination="rHv-4M-GOg" id="yoc-DQ-BPY"/>

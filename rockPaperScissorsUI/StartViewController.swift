@@ -19,6 +19,7 @@ class StartViewController: UIViewController {
     var timer = Timer()
     var cycle = 0.0
     var index = 0
+   
     
     func resetTimer() {
         cycle += 0.2
@@ -33,6 +34,7 @@ class StartViewController: UIViewController {
             index = 0
         }
         imageCycleView.image = moveImages[index]
+        player2 = index
     }
     
     var player1: Int = 10
@@ -55,7 +57,6 @@ class StartViewController: UIViewController {
         rockButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
         paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
         scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-        player2 = Int(arc4random_uniform(UInt32(3)))
         checkForWinner()
     }
     
@@ -64,7 +65,6 @@ class StartViewController: UIViewController {
         paperButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
         rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
         scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-        player2 = Int(arc4random_uniform(UInt32(3)))
         checkForWinner()
     }
     
@@ -73,7 +73,6 @@ class StartViewController: UIViewController {
         scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
         paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
         rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-        player2 = Int(arc4random_uniform(UInt32(3)))
         checkForWinner()
     }
     
@@ -82,7 +81,12 @@ class StartViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1)
         {
             let alert = UIAlertController(title: msg, message: nil, preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+            let action = UIAlertAction(title: "OK", style: .default) {(action) in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3)
+                {
+                    self.updateDisplay()
+                }
+            }
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
             self.player1 = 10
@@ -91,6 +95,7 @@ class StartViewController: UIViewController {
     }
     
     func checkForWinner() {
+        timer.invalidate()
         var winLoseMessage = "The computer chose "
         switch player2{
         case 0:
@@ -104,21 +109,19 @@ class StartViewController: UIViewController {
         if (player1 == 0 && player2 == 2) || (player1 == 1 && player2 == 0) || (player1 == 2 && player2 == 1) {
             winAlert(msg: "\(winLoseMessage)You won!")
             //bgView.backgroundColor = UIColor.green
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1)
-            {
+            
+                
                 //self.bgView.backgroundColor = self.defaultColor
-            }
         }
         if (player2 == 0 && player1 == 2) || (player2 == 1 && player1 == 0) || (player2 == 2 && player1 == 1) {
             winAlert(msg: "\(winLoseMessage)You Lose!")
             //bgView.backgroundColor = UIColor.red
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1)
-            {
+            
                 //self.bgView.backgroundColor = self.defaultColor
-            }
         }
         if (player1 == player2) {
             winAlert(msg: "\(winLoseMessage)It's tie!")
+            
         }
     }
     
