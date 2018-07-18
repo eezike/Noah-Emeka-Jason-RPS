@@ -158,6 +158,7 @@
                                                 <state key="normal" title="Button" image="rock"/>
                                                 <connections>
                                                     <action selector="rButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6sc-lU-4KU"/>
+                                                    <action selector="rTaunt:" destination="BYZ-38-t0r" eventType="touchDragExit" id="MP0-Dp-iFF"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N1K-GC-Yfl">
@@ -169,6 +170,7 @@
                                                 <state key="normal" title="Button" image="paper"/>
                                                 <connections>
                                                     <action selector="pButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="COZ-Jc-bcs"/>
+                                                    <action selector="pTaunt:" destination="BYZ-38-t0r" eventType="touchDragExit" id="T5N-x7-hsB"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rHv-4M-GOg">
@@ -182,6 +184,7 @@
                                                 <state key="normal" title="Button" image="scissors"/>
                                                 <connections>
                                                     <action selector="sButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hWC-57-OEL"/>
+                                                    <action selector="sTaunt:" destination="BYZ-38-t0r" eventType="touchDragExit" id="Zp7-NQ-jYG"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -211,12 +214,21 @@
                                                     <constraint firstAttribute="height" constant="100" id="Ewy-sv-mnQ"/>
                                                 </constraints>
                                             </imageView>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="transparent-square-tiles" translatesAutoresizingMaskIntoConstraints="NO" id="HfU-kr-sY6">
+                                                <rect key="frame" x="30" y="170" width="50" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="50" id="h0C-Oz-fRp"/>
+                                                    <constraint firstAttribute="height" constant="50" id="rzH-rs-lhX"/>
+                                                </constraints>
+                                            </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="HfU-kr-sY6" secondAttribute="bottom" constant="30" id="5Xa-IY-svM"/>
                                             <constraint firstItem="Q4J-hf-D7M" firstAttribute="centerX" secondItem="crQ-1r-t5n" secondAttribute="centerX" id="bfB-dL-jF6"/>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="250" id="lpU-ly-L2H"/>
                                             <constraint firstAttribute="height" constant="250" id="pez-29-sBd"/>
+                                            <constraint firstItem="HfU-kr-sY6" firstAttribute="leading" secondItem="crQ-1r-t5n" secondAttribute="leading" constant="30" id="pht-Wt-57X"/>
                                             <constraint firstItem="Q4J-hf-D7M" firstAttribute="centerY" secondItem="crQ-1r-t5n" secondAttribute="centerY" id="w3i-MI-aNa"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
@@ -288,6 +300,7 @@
                         <outlet property="readyButton" destination="rn3-dy-ScQ" id="JjM-EI-Q1w"/>
                         <outlet property="rockButton" destination="zbO-8k-Czu" id="X6Z-2b-6zb"/>
                         <outlet property="scissorsButton" destination="rHv-4M-GOg" id="yoc-DQ-BPY"/>
+                        <outlet property="tauntImage" destination="HfU-kr-sY6" id="r3d-Ew-Tjm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -29,6 +29,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     @IBOutlet weak var scissorsButton: UIButton!
     @IBOutlet weak var paperButton: UIButton!
     @IBOutlet weak var readyButton: UIButton!
+    @IBOutlet weak var tauntImage: UIImageView!
     
     let moveNames = ["Rock", "Paper", "Scissor"]
     
@@ -37,6 +38,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     var player2: Int = 11
     var meReady = false
     var counter = 0
+    var connected = false
     let defaultColor = UIColor(red: 255/255, green: 140/255, blue: 0, alpha: 1)
     
     var peerID:MCPeerID!
@@ -72,6 +74,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     @IBAction func rButton(_ sender: Any)
     {
+        print("regular tap")
         if !meReady && mcSession.connectedPeers.count > 0
         {
             if(player1 != 0){
@@ -122,6 +125,48 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
             }
+        }
+    }
+    
+    @IBAction func rTaunt(_ sender: UIButton) {
+        let sendMsg = "Rock T"
+        let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
+        let _: NSError?
+        do
+        {
+            try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+        }
+        catch
+        {
+            print ("Error sending data")
+        }
+    }
+    
+    @IBAction func pTaunt(_ sender: UIButton) {
+        let sendMsg = "Paper T"
+        let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
+        let _: NSError?
+        do
+        {
+            try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+        }
+        catch
+        {
+            print ("Error sending data")
+        }
+    }
+    
+    @IBAction func sTaunt(_ sender: UIButton) {
+        let sendMsg = "Scissors T"
+        let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
+        let _: NSError?
+        do
+        {
+            try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+        }
+        catch
+        {
+            print ("Error sending data")
         }
     }
     
@@ -206,7 +251,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 self.paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 self.rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 self.scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-
+                self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
             
         }
         
@@ -230,24 +275,45 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     }
     
     @IBAction func showConnectivityActions(_ sender: Any) {
-        let actionSheet = UIAlertController(title: "RPS Game!", message: "Do you want to Host or Join a game?", preferredStyle: .actionSheet)
-        
-        actionSheet.addAction(UIAlertAction(title: "Host Game", style: .default, handler: { (action:UIAlertAction) in
+        if !connected
+        {
+            let actionSheet = UIAlertController(title: "RPS Game!", message: "Do you want to Host or Join a game?", preferredStyle: .actionSheet)
             
-            self.mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "ba-td", discoveryInfo: nil, session: self.mcSession)
-            self.mcAdvertiserAssistant.start()
+            actionSheet.addAction(UIAlertAction(title: "Host Game", style: .default, handler: { (action:UIAlertAction) in
+                
+                self.mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "ba-td", discoveryInfo: nil, session: self.mcSession)
+                self.mcAdvertiserAssistant.start()
+                
+            }))
             
-        }))
+            actionSheet.addAction(UIAlertAction(title: "Join Game", style: .default, handler: { (action:UIAlertAction) in
+                let mcBrowser = MCBrowserViewController(serviceType: "ba-td", session: self.mcSession)
+                mcBrowser.delegate = self
+                self.present(mcBrowser, animated: true, completion: nil)
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            self.present(actionSheet, animated: true, completion: nil)
+            
+            
+        }
+        else{
+            print("GOT TO ELSE")
+            let dActionSheet = UIAlertController(title: "Disconnect", message: "Are you sure you want to disconnect?", preferredStyle: .actionSheet)
+            
+            dActionSheet.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action:UIAlertAction) in
+                self.mcSession.disconnect()
+            }))
+            dActionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(dActionSheet, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                self.connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
+            }
+            connected = false
+        }
         
-        actionSheet.addAction(UIAlertAction(title: "Join Game", style: .default, handler: { (action:UIAlertAction) in
-            let mcBrowser = MCBrowserViewController(serviceType: "ba-td", session: self.mcSession)
-            mcBrowser.delegate = self
-            self.present(mcBrowser, animated: true, completion: nil)
-        }))
         
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
-        self.present(actionSheet, animated: true, completion: nil)
         
     }
     
@@ -257,6 +323,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             print("Connected: \(peerID.displayName)")
             DispatchQueue.main.async {
                 self.connectionButton.setImage(#imageLiteral(resourceName: "link"), for: .normal)
+                self.connected = true
+                print("connected")
             }
             
         case MCSessionState.connecting:
@@ -266,13 +334,27 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             print("Not Connected: \(peerID.displayName)")
             DispatchQueue.main.async {
                 self.connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
-            }        }
+                self.connected = false
+                
+            }
+            
+        }
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         
         DispatchQueue.main.async {
             self.msg = NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue) as! String
+            switch self.msg{
+            case "Rock T":
+                self.tauntImage.image =  #imageLiteral(resourceName: "rock")
+            case "Paper T":
+                self.tauntImage.image = #imageLiteral(resourceName: "paper")
+            case "Scissors T":
+                self.tauntImage.image = #imageLiteral(resourceName: "scissors")
+            default:
+                self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
+            }
             if self.meReady
             {
                 switch self.msg
@@ -280,18 +362,25 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 case "rock":
                     self.player2 = 0
                     self.opponentImage.image = #imageLiteral(resourceName: "rock")
+                    self.fireImagge.image = #imageLiteral(resourceName: "transparent-square-tiles")
+                    self.gifTimer.invalidate()
+                    self.checkForWinner()
                 case "paper":
                     self.player2 = 1
                     self.opponentImage.image = #imageLiteral(resourceName: "paper")
+                    self.fireImagge.image = #imageLiteral(resourceName: "transparent-square-tiles")
+                    self.gifTimer.invalidate()
+                    self.checkForWinner()
                 case "scissors":
                     self.player2 = 2
                     self.opponentImage.image = #imageLiteral(resourceName: "scissors")
+                    self.fireImagge.image = #imageLiteral(resourceName: "transparent-square-tiles")
+                    self.gifTimer.invalidate()
+                    self.checkForWinner()
                 default:
                     break
                 }
-                self.fireImagge.image = #imageLiteral(resourceName: "transparent-square-tiles")
-                self.gifTimer.invalidate()
-                self.checkForWinner()
+
             }
             else
             {
@@ -339,11 +428,13 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         mcSession.delegate = self
         opponentImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
         connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
+        connected = false
         //================================
         for index in 0...23{
             fireAnimation.append(UIImage(named: "fire\(index)")!)
             
         }
+        self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
        //==================================
         // Do any additional setup after loading the view, typically from a nib.
     }
