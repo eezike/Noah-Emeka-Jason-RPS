@@ -226,7 +226,11 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rn3-dy-ScQ">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="transparent-square-tiles" translatesAutoresizingMaskIntoConstraints="NO" id="xlk-R0-zOO">
+                                        <rect key="frame" x="29" y="180" width="302" height="113"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rn3-dy-ScQ">
                                         <rect key="frame" x="87" y="229" width="200" height="100"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="67o-XU-aCf"/>
@@ -278,8 +282,10 @@
                     </view>
                     <connections>
                         <outlet property="bgView" destination="JY7-6m-BhX" id="hU2-6A-KRG"/>
+                        <outlet property="fireImagge" destination="xlk-R0-zOO" id="HkF-yM-6bK"/>
                         <outlet property="opponentImage" destination="Q4J-hf-D7M" id="Xnx-tc-t9J"/>
                         <outlet property="paperButton" destination="N1K-GC-Yfl" id="Iyo-pa-96g"/>
+                        <outlet property="readyButton" destination="rn3-dy-ScQ" id="JjM-EI-Q1w"/>
                         <outlet property="rockButton" destination="zbO-8k-Czu" id="X6Z-2b-6zb"/>
                         <outlet property="scissorsButton" destination="rHv-4M-GOg" id="yoc-DQ-BPY"/>
                     </connections>
@@ -298,5 +304,6 @@
         <image name="rock" width="2400" height="2171"/>
         <image name="scissors" width="900" height="900"/>
         <image name="start" width="1138" height="502"/>
+        <image name="transparent-square-tiles" width="466" height="349"/>
     </resources>
 </document>
