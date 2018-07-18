@@ -139,7 +139,6 @@
                                     <constraint firstAttribute="height" constant="60" id="0Kg-yw-F8W"/>
                                     <constraint firstAttribute="width" constant="60" id="3bs-Pg-64V"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="link"/>
                                 <connections>
                                     <action selector="showConnectivityActions:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ysA-s8-eEI"/>
                                 </connections>
@@ -282,6 +281,7 @@
                     </view>
                     <connections>
                         <outlet property="bgView" destination="JY7-6m-BhX" id="hU2-6A-KRG"/>
+                        <outlet property="connectionButton" destination="8Zy-BY-FEA" id="5wo-6b-BFO"/>
                         <outlet property="fireImagge" destination="xlk-R0-zOO" id="HkF-yM-6bK"/>
                         <outlet property="opponentImage" destination="Q4J-hf-D7M" id="Xnx-tc-t9J"/>
                         <outlet property="paperButton" destination="N1K-GC-Yfl" id="Iyo-pa-96g"/>
@@ -298,7 +298,6 @@
     <resources>
         <image name="Screen Shot 2018-07-16 at 5.07.15 PM" width="825" height="125"/>
         <image name="home" width="512" height="512"/>
-        <image name="link" width="600" height="572"/>
         <image name="paper" width="225" height="225"/>
         <image name="ready" width="256" height="256"/>
         <image name="rock" width="2400" height="2171"/>

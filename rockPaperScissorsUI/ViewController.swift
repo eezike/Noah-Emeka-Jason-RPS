@@ -23,6 +23,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     
     @IBOutlet weak var opponentImage: UIImageView!
+    @IBOutlet weak var connectionButton: UIButton!
     
     @IBOutlet weak var rockButton: UIButton!
     @IBOutlet weak var scissorsButton: UIButton!
@@ -65,14 +66,13 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         }
         fireImagge.image = fireAnimation[index]
     }
-    
     //==========================================
     
     @IBOutlet weak var bgView: UIView!
     
     @IBAction func rButton(_ sender: Any)
     {
-        if !meReady
+        if !meReady && mcSession.connectedPeers.count > 0
         {
             if(player1 != 0){
                 player1 = 0 //rock
@@ -90,7 +90,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     }
     @IBAction func pButton(_ sender: Any)
     {
-        if !meReady
+        if !meReady && mcSession.connectedPeers.count > 0
         {
             if(player1 != 1){
                 player1 = 1 // paper
@@ -108,7 +108,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     }
     @IBAction func sButton(_ sender: Any)
     {
-        if !meReady
+        if !meReady && mcSession.connectedPeers.count > 0
         {
             if(player1 != 2){
                 player1 = 2 // scissors
@@ -192,7 +192,12 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         DispatchQueue.main.asyncAfter(deadline: .now() + 1)
         {
             let alert = UIAlertController(title: msg, message: nil, preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default){(action) in
+            self.present(alert, animated: true, completion: nil)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5)
+                {
+                    self.bgView.backgroundColor = self.defaultColor
+                    alert.dismiss(animated: true, completion: nil)
+                }
                 self.player2 = 11
                 self.player1 = 10
                 self.msg = ""
@@ -201,9 +206,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 self.paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 self.rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 self.scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-            }
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
+
             
         }
         
@@ -211,20 +214,15 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     func checkForWinner() {
         if (player1 == 0 && player2 == 2) || (player1 == 1 && player2 == 0) || (player1 == 2 && player2 == 1) {
-            winAlert(msg: "You won!")
             bgView.backgroundColor = UIColor.green
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1)
-            {
-                self.bgView.backgroundColor = self.defaultColor
-            }
+            winAlert(msg: "You won!")
+           
+            
         }
         if (player2 == 0 && player1 == 2) || (player2 == 1 && player1 == 0) || (player2 == 2 && player1 == 1) {
-            winAlert(msg: "You Lose!")
             bgView.backgroundColor = UIColor.red
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1)
-            {
-                self.bgView.backgroundColor = self.defaultColor
-            }
+            winAlert(msg: "You Lose!")
+            
         }
         if (player1 == player2) {
             winAlert(msg: "It's tie!")
@@ -257,13 +255,18 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         switch state {
         case MCSessionState.connected:
             print("Connected: \(peerID.displayName)")
+            DispatchQueue.main.async {
+                self.connectionButton.setImage(#imageLiteral(resourceName: "link"), for: .normal)
+            }
             
         case MCSessionState.connecting:
             print("Connecting: \(peerID.displayName)")
             
         case MCSessionState.notConnected:
             print("Not Connected: \(peerID.displayName)")
-        }
+            DispatchQueue.main.async {
+                self.connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
+            }        }
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
@@ -335,12 +338,13 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required)
         mcSession.delegate = self
         opponentImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
+        connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
         //================================
         for index in 0...23{
             fireAnimation.append(UIImage(named: "fire\(index)")!)
             
         }
-        
+       //==================================
         // Do any additional setup after loading the view, typically from a nib.
     }
     
