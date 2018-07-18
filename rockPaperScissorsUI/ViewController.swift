@@ -129,44 +129,50 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     }
     
     @IBAction func rTaunt(_ sender: UIButton) {
-        let sendMsg = "Rock T"
-        let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
-        let _: NSError?
-        do
-        {
-            try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
-        }
-        catch
-        {
-            print ("Error sending data")
+        if !meReady && mcSession.connectedPeers.count > 0 {
+            let sendMsg = "Rock T"
+            let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
+            let _: NSError?
+            do
+            {
+                try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+            }
+            catch
+            {
+                print ("Error sending data")
+            }
         }
     }
     
     @IBAction func pTaunt(_ sender: UIButton) {
-        let sendMsg = "Paper T"
-        let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
-        let _: NSError?
-        do
-        {
-            try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
-        }
-        catch
-        {
-            print ("Error sending data")
+        if !meReady && mcSession.connectedPeers.count > 0 {
+            let sendMsg = "Paper T"
+            let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
+            let _: NSError?
+            do
+            {
+                try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+            }
+            catch
+            {
+                print ("Error sending data")
+            }
         }
     }
     
     @IBAction func sTaunt(_ sender: UIButton) {
-        let sendMsg = "Scissors T"
-        let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
-        let _: NSError?
-        do
-        {
-            try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
-        }
-        catch
-        {
-            print ("Error sending data")
+        if !meReady && mcSession.connectedPeers.count > 0 {
+            let sendMsg = "Scissors T"
+            let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
+            let _: NSError?
+            do
+            {
+                try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+            }
+            catch
+            {
+                print ("Error sending data")
+            }
         }
     }
     
@@ -226,9 +232,6 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 checkForWinner()
             }
         }
-        
-        
-        
     }
     
     func winAlert(msg: String)
