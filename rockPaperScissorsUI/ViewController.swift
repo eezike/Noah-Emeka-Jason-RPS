@@ -33,7 +33,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     var msg = "" //this is recieved String
     var player1: Int = 10
-    var player2: Int = 10
+    var player2: Int = 11
     var meReady = false
     var counter = 0
     let defaultColor = UIColor(red: 255/255, green: 140/255, blue: 0, alpha: 1)
@@ -54,6 +54,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         gifTimer.invalidate()
         gifTimer = Timer.scheduledTimer(timeInterval: cycle, target: self, selector: #selector(updateDisplay), userInfo: nil, repeats: true)
     }
+    
     @objc func updateDisplay()
     {
         resetTimer()
@@ -64,6 +65,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         }
         fireImagge.image = fireAnimation[index]
     }
+    
     //==========================================
     
     @IBOutlet weak var bgView: UIView!
@@ -72,67 +74,93 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     {
         if !meReady
         {
-            player1 = 0 //rock
-            rockButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
-            paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-            scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            if(player1 != 0){
+                player1 = 0 //rock
+                rockButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
+                paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            }
+            else{
+                player1 = 10 //nothing
+                rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            }
         }
     }
     @IBAction func pButton(_ sender: Any)
     {
         if !meReady
         {
-            player1 = 1 // paper
-            paperButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
-            rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-            scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            if(player1 != 1){
+                player1 = 1 // paper
+                paperButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
+                rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            }
+            else{
+                player1 = 10 //nothing
+                rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            }
         }
     }
     @IBAction func sButton(_ sender: Any)
     {
         if !meReady
         {
-            player1 = 2 // scissors
-            scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
-            paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-            rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            if(player1 != 2){
+                player1 = 2 // scissors
+                scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
+                paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            }
+            else{
+                player1 = 10 //nothing
+                rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            }
         }
     }
     
     @IBAction func readyButton(_ sender: Any)
     {
-        var sendMsg = ""
-        switch player1
+        if player1 != 10 && !meReady
         {
-        case 0:
-            sendMsg = "rock"
-        case 1:
-            sendMsg = "paper"
-        case 2:
-            sendMsg = "scissors"
-        default:
-            break
-        }
-        updateDisplay()
-        meReady = true
-        
-        //==============================================
-        //Send choice to other player
-        let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
-        let _: NSError?
-        do
-        {
-            try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
-        }
-        catch
-        {
-            print ("Error sending data")
-        }
-        //==============================================
-        
-        if(player1 != 10)
-        {
-            if(msg != "")
+            meReady = true //disables buttons
+            var sendMsg = ""
+            
+            switch player1
+            {
+            case 0:
+                sendMsg = "rock"
+            case 1:
+                sendMsg = "paper"
+            case 2:
+                sendMsg = "scissors"
+            default:
+                break
+            }
+            updateDisplay() //start fire
+            
+            
+            //==============================================
+            //Send choice to other player
+            let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
+            let _: NSError?
+            do
+            {
+                try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+            }
+            catch
+            {
+                print ("Error sending data")
+            }
+            //==============================================
+            
+            if (msg != "")
             {
                 switch msg
                 {
@@ -149,13 +177,13 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                     break
                 }
                 fireImagge.image = #imageLiteral(resourceName: "transparent-square-tiles")
-                self.player2 = 10
-                self.player1 = 10
                 gifTimer.invalidate()
                 checkForWinner()
             }
-            
         }
+        
+        
+        
     }
     
     func winAlert(msg: String)
@@ -163,18 +191,20 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1)
         {
-            self.meReady = false
             let alert = UIAlertController(title: msg, message: nil, preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+            let action = UIAlertAction(title: "OK", style: .default){(action) in
+                self.player2 = 11
+                self.player1 = 10
+                self.msg = ""
+                self.opponentImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
+                self.meReady = false
+                self.paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                self.rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                self.scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            }
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
-            self.player2 = 10
-            self.player1 = 10
-            self.opponentImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
-            self.readyButton.isEnabled = true
-            self.paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-            self.rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-            self.scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            
         }
         
     }
@@ -200,11 +230,6 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             winAlert(msg: "It's tie!")
         }
     }
-    
-    
-    
-    
-    
     
     @IBAction func showConnectivityActions(_ sender: Any) {
         let actionSheet = UIAlertController(title: "RPS Game!", message: "Do you want to Host or Join a game?", preferredStyle: .actionSheet)
@@ -245,10 +270,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         
         DispatchQueue.main.async {
             self.msg = NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue) as! String
-            print("\nStep 1\n")
             if self.meReady
             {
-                print("\nStep 2\n")
                 switch self.msg
                 {
                 case "rock":
@@ -261,19 +284,25 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                     self.player2 = 2
                     self.opponentImage.image = #imageLiteral(resourceName: "scissors")
                 default:
-                    print("\nStep 3\n")
                     break
                 }
-                print("\nMsg: \(self.msg)\n")
                 self.fireImagge.image = #imageLiteral(resourceName: "transparent-square-tiles")
-                self.player2 = 10
-                self.player1 = 10
                 self.gifTimer.invalidate()
                 self.checkForWinner()
             }
             else
             {
-                print("\nNot ready\n")
+                switch self.msg
+                {
+                case "rock":
+                    self.player2 = 0
+                case "paper":
+                    self.player2 = 1
+                case "scissors":
+                    self.player2 = 2
+                default:
+                    break
+                }
             }
         }
         
