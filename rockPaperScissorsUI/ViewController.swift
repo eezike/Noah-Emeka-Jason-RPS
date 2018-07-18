@@ -51,7 +51,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     var index = 0
     func resetTimer()
     {
-        cycle += 0.0007
+        cycle = 0.07
         gifTimer.invalidate()
         gifTimer = Timer.scheduledTimer(timeInterval: cycle, target: self, selector: #selector(updateDisplay), userInfo: nil, repeats: true)
     }

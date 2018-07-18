@@ -22,7 +22,7 @@ class StartViewController: UIViewController {
    
     
     func resetTimer() {
-        cycle += 0.2
+        cycle = 0.2
         timer.invalidate()
         timer = Timer.scheduledTimer(timeInterval: cycle, target: self, selector: #selector(updateDisplay), userInfo: nil, repeats: true)
     }
@@ -82,13 +82,16 @@ class StartViewController: UIViewController {
         {
             let alert = UIAlertController(title: msg, message: nil, preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default) {(action) in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
                 {
                     self.updateDisplay()
                 }
             }
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
+            self.rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            self.paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            self.scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
             self.player1 = 10
         }
         
