@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F5FD80C20FFD84800197764 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5FD80B20FFD84800197764 /* HelpViewController.swift */; };
 		4F88F9E920FD20CE009BC3B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88F9E820FD20CE009BC3B3 /* AppDelegate.swift */; };
 		4F88F9EB20FD20CE009BC3B3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F88F9EA20FD20CE009BC3B3 /* ViewController.swift */; };
 		4F88F9EE20FD20CE009BC3B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F88F9EC20FD20CE009BC3B3 /* Main.storyboard */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4F5FD80B20FFD84800197764 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		4F88F9E520FD20CE009BC3B3 /* rockPaperScissorsUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rockPaperScissorsUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F88F9E820FD20CE009BC3B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4F88F9EA20FD20CE009BC3B3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				4F88F9E820FD20CE009BC3B3 /* AppDelegate.swift */,
 				4F88F9EA20FD20CE009BC3B3 /* ViewController.swift */,
 				4F88F9EC20FD20CE009BC3B3 /* Main.storyboard */,
+				4F5FD80B20FFD84800197764 /* HelpViewController.swift */,
 				4F88FA1620FD4AE4009BC3B3 /* StartViewController.swift */,
 				4F88F9EF20FD20D2009BC3B3 /* Assets.xcassets */,
 				4F88F9F120FD20D2009BC3B3 /* LaunchScreen.storyboard */,
@@ -262,6 +265,7 @@
 				4F88F9EB20FD20CE009BC3B3 /* ViewController.swift in Sources */,
 				4F88F9E920FD20CE009BC3B3 /* AppDelegate.swift in Sources */,
 				4F88FA1720FD4AE4009BC3B3 /* StartViewController.swift in Sources */,
+				4F5FD80C20FFD84800197764 /* HelpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

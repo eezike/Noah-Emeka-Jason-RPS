@@ -37,7 +37,6 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     var player1: Int = 10
     var player2: Int = 11
     var meReady = false
-    var counter = 0
     var connected = false
     let defaultColor = UIColor(red: 255/255, green: 140/255, blue: 0, alpha: 1)
     
@@ -90,6 +89,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
             }
         }
+        else{ helpDisplay()}
     }
     @IBAction func pButton(_ sender: Any)
     {
@@ -108,6 +108,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
             }
         }
+        else{ helpDisplay()}
     }
     @IBAction func sButton(_ sender: Any)
     {
@@ -126,6 +127,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
             }
         }
+        else{ helpDisplay()}
     }
     
     @IBAction func rTaunt(_ sender: UIButton) {
@@ -307,6 +309,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             
             dActionSheet.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action:UIAlertAction) in
                 self.mcSession.disconnect()
+                self.performSegue(withIdentifier: "backToHome", sender: self)
             }))
             dActionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(dActionSheet, animated: true, completion: nil)
@@ -447,6 +450,14 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func helpDisplay(){
+        let helpAlert = UIAlertController(title: "You are not connected to another player.", message: nil, preferredStyle: .alert)
+        helpAlert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        helpAlert.addAction(UIAlertAction(title: "Help", style: .default)
+        {(action) in self.performSegue(withIdentifier: "alertToHelp", sender: self)})
+        self.present(helpAlert, animated: true, completion: nil)
     }
     
     
