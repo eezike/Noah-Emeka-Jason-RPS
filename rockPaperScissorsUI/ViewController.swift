@@ -10,6 +10,7 @@ import UIKit
 import MultipeerConnectivity
 import CloudKit
 import AudioToolbox.AudioServices
+import AVFoundation
 
 class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControllerDelegate {
     
@@ -24,7 +25,6 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     @IBOutlet weak var tauntImage: UIImageView!
     @IBOutlet weak var winLoseLabel: UILabel!
     
-    let moveNames = ["Rock", "Paper", "Scissor"]
     /*
      rock is 0
      paper is 1
@@ -46,7 +46,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     var mcAdvertiserAssistant:MCAdvertiserAssistant!
     
     var pop = SystemSoundID(4095) //vibration when you TAUNT!
-
+    var audioPlayer: AVAudioPlayer?
+    
     //========================================== FIRE
     //Fire Animation
     var fireAnimation = [UIImage]()
@@ -93,6 +94,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 rockButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
                 paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                playSoundWithFileName(file: "Sounds/rock", fileExt: ".mp3")
             }
             else{ //they are rock -> they want deselect
                 deselect ()
@@ -110,6 +112,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 paperButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
                 rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                playSoundWithFileName(file: "Sounds/paper", fileExt: ".mp3")
             }
             else{
                 deselect ()
@@ -127,6 +130,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
                 paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                playSoundWithFileName(file: "Sounds/scissors", fileExt: ".mp3")
             }
             else
             {
@@ -246,6 +250,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     func winAlert(msg: String)
     {
+        playSoundWithFileName(file: "Sounds/win", fileExt: ".mp3")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1)
         { //delays alert so you can see results
             let alert = UIAlertController(title: msg, message: nil, preferredStyle: .alert)
@@ -274,13 +279,13 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             
             actionSheet.addAction(UIAlertAction(title: "Host Game", style: .default, handler: { (action:UIAlertAction) in
                 
-                self.mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "ee-td", discoveryInfo: nil, session: self.mcSession)
+                self.mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "ur-gay", discoveryInfo: nil, session: self.mcSession)
                 self.mcAdvertiserAssistant.start()
                 self.hosting = true
             }))
             
             actionSheet.addAction(UIAlertAction(title: "Join Game", style: .default, handler: { (action:UIAlertAction) in
-                let mcBrowser = MCBrowserViewController(serviceType: "ee-td", session: self.mcSession)
+                let mcBrowser = MCBrowserViewController(serviceType: "ur-gay", session: self.mcSession)
                 mcBrowser.delegate = self
                 self.present(mcBrowser, animated: true, completion: nil)
             }))
@@ -464,5 +469,24 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         {(action) in self.performSegue(withIdentifier: "alertToHelp", sender: self)}) //GOES TO HELPVIEWCONTROLLER
         self.present(helpAlert, animated: true, completion: nil)
     }
+    
+    //====================== SOUNDS
+    func playSoundWithFileName(file: String, fileExt: String)-> Void {
+        let audioSourceURL: URL!
+        audioSourceURL = Bundle.main.url(forResource: file, withExtension: fileExt)
+        if audioSourceURL == nil{
+            print("No Audio")
+        }
+        else{
+            do {
+                audioPlayer = try AVAudioPlayer.init(contentsOf: audioSourceURL!)
+                audioPlayer?.prepareToPlay()
+                audioPlayer?.play()
+            } catch{
+                print(error)
+            }
+        }
+    }
+    //====================== SOUNDS
 }
 
