@@ -123,7 +123,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k4T-n7-2yk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-674.39999999999998" y="33.733133433283363"/>
+            <point key="canvasLocation" x="31" y="-57"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -221,14 +221,25 @@
                                                     <constraint firstAttribute="height" constant="50" id="rzH-rs-lhX"/>
                                                 </constraints>
                                             </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0/0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jyF-Cn-S9X">
+                                                <rect key="frame" x="324" y="217.5" width="27" height="24.5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="25" id="ePJ-ii-WPC"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="jyF-Cn-S9X" secondAttribute="trailing" constant="8" id="0Dv-N7-ebG"/>
                                             <constraint firstAttribute="bottom" secondItem="HfU-kr-sY6" secondAttribute="bottom" constant="30" id="5Xa-IY-svM"/>
                                             <constraint firstItem="Q4J-hf-D7M" firstAttribute="centerX" secondItem="crQ-1r-t5n" secondAttribute="centerX" id="bfB-dL-jF6"/>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="250" id="lpU-ly-L2H"/>
                                             <constraint firstAttribute="height" constant="250" id="pez-29-sBd"/>
                                             <constraint firstItem="HfU-kr-sY6" firstAttribute="leading" secondItem="crQ-1r-t5n" secondAttribute="leading" constant="30" id="pht-Wt-57X"/>
+                                            <constraint firstAttribute="bottom" secondItem="jyF-Cn-S9X" secondAttribute="bottom" constant="8" id="ttQ-mY-3yc"/>
                                             <constraint firstItem="Q4J-hf-D7M" firstAttribute="centerY" secondItem="crQ-1r-t5n" secondAttribute="centerY" id="w3i-MI-aNa"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
@@ -315,13 +326,14 @@
                         <outlet property="rockButton" destination="zbO-8k-Czu" id="X6Z-2b-6zb"/>
                         <outlet property="scissorsButton" destination="rHv-4M-GOg" id="yoc-DQ-BPY"/>
                         <outlet property="tauntImage" destination="HfU-kr-sY6" id="r3d-Ew-Tjm"/>
+                        <outlet property="winLoseLabel" destination="jyF-Cn-S9X" id="cn6-Od-6s9"/>
                         <segue destination="GeR-LU-Ns6" kind="show" identifier="backToHome" animates="NO" id="nks-yY-aXh"/>
                         <segue destination="JjX-o9-WYA" kind="show" identifier="alertToHelp" animates="NO" id="PMb-N2-BSi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="681" y="-57"/>
+            <point key="canvasLocation" x="680.79999999999995" y="-57.121439280359823"/>
         </scene>
         <!--Help View Controller-->
         <scene sceneID="yvJ-fi-zaB">
@@ -396,7 +408,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nz2-99-tXi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1399.2" y="-57.121439280359823"/>
+            <point key="canvasLocation" x="1332" y="-57"/>
         </scene>
     </scenes>
     <resources>

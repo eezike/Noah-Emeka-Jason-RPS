@@ -9,7 +9,7 @@
 import UIKit
 import MultipeerConnectivity
 import CloudKit
-
+import AudioToolbox.AudioServices
 
 class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControllerDelegate {
     
@@ -31,6 +31,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     @IBOutlet weak var readyButton: UIButton!
     @IBOutlet weak var tauntImage: UIImageView!
     
+    @IBOutlet weak var winLoseLabel: UILabel!
     let moveNames = ["Rock", "Paper", "Scissor"]
     
     var msg = "" //this is recieved String
@@ -38,12 +39,15 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     var player2: Int = 11
     var meReady = false
     var connected = false
+    var wins = 0
+    var losses = 0
     let defaultColor = UIColor(red: 255/255, green: 140/255, blue: 0, alpha: 1)
     
     var peerID:MCPeerID!
     var mcSession:MCSession!
     var mcAdvertiserAssistant:MCAdvertiserAssistant!
-    
+    var pop = SystemSoundID(4095)
+
     //==========================================
     //Fire Animation
     var fireAnimation = [UIImage]()
@@ -71,6 +75,14 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     @IBOutlet weak var bgView: UIView!
     
+    func deselect ()
+    {
+        player1 = 10 //nothing
+        rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+        paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+        scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+    }
+    
     @IBAction func rButton(_ sender: Any)
     {
         print("regular tap")
@@ -83,10 +95,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
             }
             else{
-                player1 = 10 //nothing
-                rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                deselect ()
             }
         }
         else{ helpDisplay()}
@@ -102,10 +111,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
             }
             else{
-                player1 = 10 //nothing
-                rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+                deselect ()
             }
         }
         else{ helpDisplay()}
@@ -120,11 +126,9 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
             }
-            else{
-                player1 = 10 //nothing
-                rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
+            else
+            {
+                deselect ()
             }
         }
         else{ helpDisplay()}
@@ -132,49 +136,22 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     @IBAction func rTaunt(_ sender: UIButton) {
         if !meReady && mcSession.connectedPeers.count > 0 {
-            let sendMsg = "Rock T"
-            let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
-            let _: NSError?
-            do
-            {
-                try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
-            }
-            catch
-            {
-                print ("Error sending data")
-            }
+            AudioServicesPlaySystemSound(pop)
+            send (sendMessage: "Rock T")
         }
     }
     
     @IBAction func pTaunt(_ sender: UIButton) {
         if !meReady && mcSession.connectedPeers.count > 0 {
-            let sendMsg = "Paper T"
-            let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
-            let _: NSError?
-            do
-            {
-                try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
-            }
-            catch
-            {
-                print ("Error sending data")
-            }
+            AudioServicesPlaySystemSound(pop)
+            send (sendMessage: "Paper T")
         }
     }
     
     @IBAction func sTaunt(_ sender: UIButton) {
         if !meReady && mcSession.connectedPeers.count > 0 {
-            let sendMsg = "Scissors T"
-            let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
-            let _: NSError?
-            do
-            {
-                try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
-            }
-            catch
-            {
-                print ("Error sending data")
-            }
+            AudioServicesPlaySystemSound(pop)
+            send (sendMessage: "Scissors T")
         }
     }
     
@@ -201,16 +178,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             
             //==============================================
             //Send choice to other player
-            let message = sendMsg.data(using: String.Encoding.utf8, allowLossyConversion: false)
-            let _: NSError?
-            do
-            {
-                try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
-            }
-            catch
-            {
-                print ("Error sending data")
-            }
+            send (sendMessage: sendMsg)
             //==============================================
             
             if (msg != "")
@@ -235,6 +203,21 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             }
         }
     }
+    
+    func send (sendMessage: String)
+    {
+        let message = sendMessage.data(using: String.Encoding.utf8, allowLossyConversion: false)
+        let _: NSError?
+        do
+        {
+            try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+        }
+        catch
+        {
+            print ("Error sending data")
+        }
+    }
+    
     
     func winAlert(msg: String)
     {
@@ -266,17 +249,20 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         if (player1 == 0 && player2 == 2) || (player1 == 1 && player2 == 0) || (player1 == 2 && player2 == 1) {
             bgView.backgroundColor = UIColor.green
             winAlert(msg: "You won!")
-           
+           wins += 1
             
         }
         if (player2 == 0 && player1 == 2) || (player2 == 1 && player1 == 0) || (player2 == 2 && player1 == 1) {
             bgView.backgroundColor = UIColor.red
             winAlert(msg: "You Lose!")
+            losses += 1
             
         }
         if (player1 == player2) {
             winAlert(msg: "It's tie!")
+            losses += 1
         }
+        winLoseLabel.text = "\(wins)/\(wins+losses)"
     }
     
     @IBAction func showConnectivityActions(_ sender: Any) {
@@ -286,13 +272,13 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             
             actionSheet.addAction(UIAlertAction(title: "Host Game", style: .default, handler: { (action:UIAlertAction) in
                 
-                self.mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "ba-td", discoveryInfo: nil, session: self.mcSession)
+                self.mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "ee-td", discoveryInfo: nil, session: self.mcSession)
                 self.mcAdvertiserAssistant.start()
                 
             }))
             
             actionSheet.addAction(UIAlertAction(title: "Join Game", style: .default, handler: { (action:UIAlertAction) in
-                let mcBrowser = MCBrowserViewController(serviceType: "ba-td", session: self.mcSession)
+                let mcBrowser = MCBrowserViewController(serviceType: "ee-td", session: self.mcSession)
                 mcBrowser.delegate = self
                 self.present(mcBrowser, animated: true, completion: nil)
             }))
@@ -303,7 +289,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             
             
         }
-        else{
+        else
+        {
             print("GOT TO ELSE")
             let dActionSheet = UIAlertController(title: "Disconnect", message: "Are you sure you want to disconnect?", preferredStyle: .actionSheet)
             
@@ -322,6 +309,13 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         
         
     }
+    
+    
+    
+    
+    
+    //====================================
+    //Multipeer functions
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         switch state {
@@ -359,6 +353,9 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             case "Scissors T":
                 self.tauntImage.image = #imageLiteral(resourceName: "scissors")
             default:
+                self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7){
                 self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
             }
             if self.meReady
@@ -436,13 +433,15 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
         connected = false
         //================================
+        //For fire animation
         for index in 0...23{
             fireAnimation.append(UIImage(named: "fire\(index)")!)
             
         }
         self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
        //==================================
-        // Do any additional setup after loading the view, typically from a nib.
+        wins = 0
+        losses = 0
     }
     
     
