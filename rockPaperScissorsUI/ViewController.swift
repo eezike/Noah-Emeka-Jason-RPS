@@ -94,7 +94,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 rockButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
                 paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                playSoundWithFileName(file: "Sounds/rock", fileExt: ".mp3")
+//                playSoundWithFileName(file: "Sounds/rock", fileExt: ".mp3")
             }
             else{ //they are rock -> they want deselect
                 deselect ()
@@ -112,7 +112,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 paperButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
                 rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                playSoundWithFileName(file: "Sounds/paper", fileExt: ".mp3")
+//                playSoundWithFileName(file: "Sounds/paper", fileExt: ".mp3")
             }
             else{
                 deselect ()
@@ -130,7 +130,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
                 paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                playSoundWithFileName(file: "Sounds/scissors", fileExt: ".mp3")
+//                playSoundWithFileName(file: "Sounds/scissors", fileExt: ".mp3")
             }
             else
             {
@@ -242,8 +242,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             
         }
         if (player1 == player2) {
-            winAlert(msg: "It's tie!")
-            losses += 1
+            winAlert(msg: "It's a tie!")
+//            losses += 1
         }
         winLoseLabel.text = "\(wins)/\(wins+losses)" //sets record at bottom right
     }
