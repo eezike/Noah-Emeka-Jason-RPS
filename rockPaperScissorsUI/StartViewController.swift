@@ -76,6 +76,29 @@ class StartViewController: UIViewController {
         checkForWinner()
     }
     
+    func checkForWinner() {
+        timer.invalidate()
+        var winLoseMessage = "The computer chose "
+        switch player2{
+        case 0:
+            winLoseMessage += "rock. "
+        case 1:
+            winLoseMessage += "paper. "
+        case 2:
+            winLoseMessage += "scissors. "
+        default: break
+        }
+        if (player1 == 0 && player2 == 2) || (player1 == 1 && player2 == 0) || (player1 == 2 && player2 == 1) {
+            winAlert(msg: "\(winLoseMessage)You won!")
+        }
+        if (player2 == 0 && player1 == 2) || (player2 == 1 && player1 == 0) || (player2 == 2 && player1 == 1) {
+            winAlert(msg: "\(winLoseMessage)You Lose!")
+        }
+        if (player1 == player2) {
+            winAlert(msg: "\(winLoseMessage)It's tie!")
+        }
+    }
+    
     func winAlert(msg: String)
     {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1)
@@ -95,37 +118,6 @@ class StartViewController: UIViewController {
             self.player1 = 10
         }
         
-    }
-    
-    func checkForWinner() {
-        timer.invalidate()
-        var winLoseMessage = "The computer chose "
-        switch player2{
-        case 0:
-            winLoseMessage += "rock. "
-        case 1:
-            winLoseMessage += "paper. "
-        case 2:
-            winLoseMessage += "scissors. "
-        default: break
-        }
-        if (player1 == 0 && player2 == 2) || (player1 == 1 && player2 == 0) || (player1 == 2 && player2 == 1) {
-            winAlert(msg: "\(winLoseMessage)You won!")
-            //bgView.backgroundColor = UIColor.green
-            
-                
-                //self.bgView.backgroundColor = self.defaultColor
-        }
-        if (player2 == 0 && player1 == 2) || (player2 == 1 && player1 == 0) || (player2 == 2 && player1 == 1) {
-            winAlert(msg: "\(winLoseMessage)You Lose!")
-            //bgView.backgroundColor = UIColor.red
-            
-                //self.bgView.backgroundColor = self.defaultColor
-        }
-        if (player1 == player2) {
-            winAlert(msg: "\(winLoseMessage)It's tie!")
-            
-        }
     }
     
 }

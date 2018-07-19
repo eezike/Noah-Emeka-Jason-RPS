@@ -2,8 +2,8 @@
 //  ViewController.swift
 //  Rock-Paper-Scissors
 //
-//  Created by Jason Dong on 7/16/18.
-//  Copyright © 2018 Jason Dong. All rights reserved.
+//  Created by Jason Dong, Noah Rubin, Emeka Ezike on 7/16/18.
+//  Copyright © 2018 Jason Dong, Noah Rubin, Emeka Ezike. All rights reserved.
 //
 
 import UIKit
@@ -15,40 +15,39 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     
     @IBOutlet weak var fireImagge: UIImageView!
-    /*
-     rock is 0
-     paper is 1
-     scissors are 2
-     */
-    
-    
     @IBOutlet weak var opponentImage: UIImageView!
     @IBOutlet weak var connectionButton: UIButton!
-    
     @IBOutlet weak var rockButton: UIButton!
     @IBOutlet weak var scissorsButton: UIButton!
     @IBOutlet weak var paperButton: UIButton!
     @IBOutlet weak var readyButton: UIButton!
     @IBOutlet weak var tauntImage: UIImageView!
-    
     @IBOutlet weak var winLoseLabel: UILabel!
+    
     let moveNames = ["Rock", "Paper", "Scissor"]
-    
+    /*
+     rock is 0
+     paper is 1
+     scissors are 2
+     */
     var msg = "" //this is recieved String
-    var player1: Int = 10
-    var player2: Int = 11
-    var meReady = false
-    var connected = false
+    var player1: Int = 10 //10 is nothing
+    var player2: Int = 11 //11 is nothing (10 != 11)
+    var meReady = false //once you press ready, you can't change your answer (use: line 86)
+    var connected = false //for images
     var wins = 0
-    var losses = 0
-    let defaultColor = UIColor(red: 255/255, green: 140/255, blue: 0, alpha: 1)
+    var losses = 0 //for the record on bottom right
+    let defaultColor = UIColor(red: 255/255, green: 140/255, blue: 0, alpha: 1) //the screen background (custom orange color)
+    var hosting = false //Making sure that you aren't hosting more than one session at once
     
+    //multipeer connection
     var peerID:MCPeerID!
     var mcSession:MCSession!
     var mcAdvertiserAssistant:MCAdvertiserAssistant!
-    var pop = SystemSoundID(4095)
+    
+    var pop = SystemSoundID(4095) //vibration when you TAUNT!
 
-    //==========================================
+    //========================================== FIRE
     //Fire Animation
     var fireAnimation = [UIImage]()
     var gifTimer = Timer()
@@ -71,11 +70,11 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         }
         fireImagge.image = fireAnimation[index]
     }
-    //==========================================
+    //========================================== FIRE
     
-    @IBOutlet weak var bgView: UIView!
+    @IBOutlet weak var bgView: UIView! //the background that changes color when you win or lose
     
-    func deselect ()
+    func deselect ()  //sets player1 to 10(nothing) and sets background to blank
     {
         player1 = 10 //nothing
         rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
@@ -83,23 +82,25 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
     }
     
+    //========================================== SELECTION
     @IBAction func rButton(_ sender: Any)
     {
         print("regular tap")
-        if !meReady && mcSession.connectedPeers.count > 0
+        if !meReady && mcSession.connectedPeers.count > 0 //If you are connected to someone and have not selected ready
         {
-            if(player1 != 0){
+            if(player1 != 0){ //if player1 is not ALREADY rock then select rock
                 player1 = 0 //rock
                 rockButton.setBackgroundImage(#imageLiteral(resourceName: "selected"), for: UIControlState.normal)
                 paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
                 scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
             }
-            else{
+            else{ //they are rock -> they want deselect
                 deselect ()
             }
         }
-        else{ helpDisplay()}
+        else if mcSession.connectedPeers.count <= 0 { helpDisplay()}
     }
+    
     @IBAction func pButton(_ sender: Any)
     {
         if !meReady && mcSession.connectedPeers.count > 0
@@ -114,8 +115,9 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 deselect ()
             }
         }
-        else{ helpDisplay()}
+        else if mcSession.connectedPeers.count <= 0 { helpDisplay()}
     }
+    
     @IBAction func sButton(_ sender: Any)
     {
         if !meReady && mcSession.connectedPeers.count > 0
@@ -131,13 +133,15 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 deselect ()
             }
         }
-        else{ helpDisplay()}
+        else if mcSession.connectedPeers.count <= 0 { helpDisplay()}
     }
+    //========================================== SELECTION
     
-    @IBAction func rTaunt(_ sender: UIButton) {
+    //========================================== TAUNT
+    @IBAction func rTaunt(_ sender: UIButton) { //resease on exit -> swipe out of the button, drag button to corner
         if !meReady && mcSession.connectedPeers.count > 0 {
-            AudioServicesPlaySystemSound(pop)
-            send (sendMessage: "Rock T")
+            AudioServicesPlaySystemSound(pop) //VIBRATE
+            send (sendMessage: "Rock T") //TAUNT MESSAGE, treated differently in recieve message function
         }
     }
     
@@ -154,13 +158,15 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             send (sendMessage: "Scissors T")
         }
     }
+    //========================================== TAUNT
     
+    //========================================== READY
     @IBAction func readyButton(_ sender: Any)
     {
-        if player1 != 10 && !meReady
+        if player1 != 10 && !meReady //if its not already Readyed and you have selected something
         {
             meReady = true //disables buttons
-            var sendMsg = ""
+            var sendMsg = "" //creates a var
             
             switch player1
             {
@@ -175,13 +181,12 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             }
             updateDisplay() //start fire
             
-            
             //==============================================
             //Send choice to other player
             send (sendMessage: sendMsg)
             //==============================================
             
-            if (msg != "")
+            if (msg != "") //you have recieved something from Player2
             {
                 switch msg
                 {
@@ -197,20 +202,21 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 default:
                     break
                 }
-                fireImagge.image = #imageLiteral(resourceName: "transparent-square-tiles")
+                fireImagge.image = #imageLiteral(resourceName: "transparent-square-tiles") //extinguish fire
                 gifTimer.invalidate()
                 checkForWinner()
             }
         }
     }
     
-    func send (sendMessage: String)
+    func send (sendMessage: String) //multipeer
     {
-        let message = sendMessage.data(using: String.Encoding.utf8, allowLossyConversion: false)
+        let message = sendMessage.data(using: String.Encoding.utf8, allowLossyConversion: false) //encode the message into type Data
         let _: NSError?
         do
         {
             try self.mcSession.send(message!,toPeers: self.mcSession.connectedPeers, with: .reliable)
+            //attempts to send a message if it fails goes to catch
         }
         catch
         {
@@ -218,41 +224,14 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         }
     }
     
-    
-    func winAlert(msg: String)
-    {
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1)
-        {
-            let alert = UIAlertController(title: msg, message: nil, preferredStyle: .alert)
-            self.present(alert, animated: true, completion: nil)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5)
-                {
-                    self.bgView.backgroundColor = self.defaultColor
-                    alert.dismiss(animated: true, completion: nil)
-                }
-                self.player2 = 11
-                self.player1 = 10
-                self.msg = ""
-                self.opponentImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
-                self.meReady = false
-                self.paperButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                self.rockButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                self.scissorsButton.setBackgroundImage(#imageLiteral(resourceName: "transparent-square-tiles"), for: UIControlState.normal)
-                self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
-            
-        }
-        
-    }
-    
     func checkForWinner() {
-        if (player1 == 0 && player2 == 2) || (player1 == 1 && player2 == 0) || (player1 == 2 && player2 == 1) {
+        if (player1 == 0 && player2 == 2) || (player1 == 1 && player2 == 0) || (player1 == 2 && player2 == 1) { //win cases
             bgView.backgroundColor = UIColor.green
             winAlert(msg: "You won!")
            wins += 1
             
         }
-        if (player2 == 0 && player1 == 2) || (player2 == 1 && player1 == 0) || (player2 == 2 && player1 == 1) {
+        if (player2 == 0 && player1 == 2) || (player2 == 1 && player1 == 0) || (player2 == 2 && player1 == 1) { //lose cases
             bgView.backgroundColor = UIColor.red
             winAlert(msg: "You Lose!")
             losses += 1
@@ -262,11 +241,34 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             winAlert(msg: "It's tie!")
             losses += 1
         }
-        winLoseLabel.text = "\(wins)/\(wins+losses)"
+        winLoseLabel.text = "\(wins)/\(wins+losses)" //sets record at bottom right
     }
     
-    @IBAction func showConnectivityActions(_ sender: Any) {
-        if !connected
+    func winAlert(msg: String)
+    {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1)
+        { //delays alert so you can see results
+            let alert = UIAlertController(title: msg, message: nil, preferredStyle: .alert)
+            self.present(alert, animated: true, completion: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5)
+            { //auto takes away the alert and chnges background color
+                self.bgView.backgroundColor = self.defaultColor //orange
+                alert.dismiss(animated: true, completion: nil)
+            }
+            //===================== RESET
+            self.player2 = 11
+            self.player1 = 10
+            self.msg = ""
+            self.opponentImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
+            self.meReady = false
+            self.deselect()
+            self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
+            //===================== RESET
+        }
+    }
+    
+    @IBAction func showConnectivityActions(_ sender: Any) { //when you click the connect button at the top of the screen\
+        if !connected && !hosting //if you are NOT connected and NOT hosting, you can choose to host or join a game
         {
             let actionSheet = UIAlertController(title: "RPS Game!", message: "Do you want to Host or Join a game?", preferredStyle: .actionSheet)
             
@@ -274,7 +276,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 
                 self.mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "ee-td", discoveryInfo: nil, session: self.mcSession)
                 self.mcAdvertiserAssistant.start()
-                
+                self.hosting = true
             }))
             
             actionSheet.addAction(UIAlertAction(title: "Join Game", style: .default, handler: { (action:UIAlertAction) in
@@ -286,34 +288,39 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             
             self.present(actionSheet, animated: true, completion: nil)
-            
-            
         }
-        else
+        else if hosting{ //if you are already hosting :
+            let hostingAlert = UIAlertController(title: "You are hosting", message: "would you like to disconnect?", preferredStyle: .alert)
+            hostingAlert.addAction(UIAlertAction(title: "Disconnect", style: .destructive, handler: { (action:UIAlertAction) in
+                self.mcSession.disconnect()
+                DispatchQueue.main.async {
+                    self.connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
+                    self.performSegue(withIdentifier: "backToHome", sender: self)
+                }
+                self.connected = false
+            }))
+            hostingAlert.addAction(UIAlertAction(title: "Keep Hosting", style: .default, handler: nil))
+            self.present(hostingAlert, animated: true, completion: nil)
+        }
+        
+        else //you joined and want to leave
         {
             print("GOT TO ELSE")
             let dActionSheet = UIAlertController(title: "Disconnect", message: "Are you sure you want to disconnect?", preferredStyle: .actionSheet)
             
-            dActionSheet.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action:UIAlertAction) in
+            dActionSheet.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (action:UIAlertAction) in
                 self.mcSession.disconnect()
-                self.performSegue(withIdentifier: "backToHome", sender: self)
+                DispatchQueue.main.async {
+                    self.connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
+                    self.performSegue(withIdentifier: "backToHome", sender: self)
+                }
+                self.connected = false
             }))
-            dActionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            dActionSheet.addAction(UIAlertAction(title: "Keep Playing!", style: .default, handler: nil))
             self.present(dActionSheet, animated: true, completion: nil)
-            DispatchQueue.main.async {
-                self.connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
-            }
-            connected = false
         }
-        
-        
-        
     }
-    
-    
-    
-    
-    
+
     //====================================
     //Multipeer functions
     
@@ -341,11 +348,11 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         }
     }
     
-    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) { //recieved something!
         
         DispatchQueue.main.async {
             self.msg = NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue) as! String
-            switch self.msg{
+            switch self.msg{ //DID YOU RECIEVE A TAUNT?
             case "Rock T":
                 self.tauntImage.image =  #imageLiteral(resourceName: "rock")
             case "Paper T":
@@ -356,9 +363,9 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.7){
-                self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
+                self.tauntImage.image = #imageLiteral(resourceName: "transparent-square-tiles") //turns off taunt after .7 secs
             }
-            if self.meReady
+            if self.meReady //if you are ready to display the oppents sent image:
             {
                 switch self.msg
                 {
@@ -385,12 +392,12 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                 }
 
             }
-            else
+            else //NOT YET CHOSEN AND READYED UP
             {
                 switch self.msg
                 {
                 case "rock":
-                    self.player2 = 0
+                    self.player2 = 0 //store the number , when you click ready it will be displayed and your choice will be sent
                 case "paper":
                     self.player2 = 1
                 case "scissors":
@@ -425,9 +432,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        peerID = MCPeerID(displayName: UIDevice.current.name)
-        mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required)
+        peerID = MCPeerID(displayName: UIDevice.current.name) //your display name
+        mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required) //no security
         mcSession.delegate = self
         opponentImage.image = #imageLiteral(resourceName: "transparent-square-tiles")
         connectionButton.setImage(#imageLiteral(resourceName: "disconnected"), for: .normal)
@@ -455,11 +461,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         let helpAlert = UIAlertController(title: "You are not connected to another player.", message: nil, preferredStyle: .alert)
         helpAlert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         helpAlert.addAction(UIAlertAction(title: "Help", style: .default)
-        {(action) in self.performSegue(withIdentifier: "alertToHelp", sender: self)})
+        {(action) in self.performSegue(withIdentifier: "alertToHelp", sender: self)}) //GOES TO HELPVIEWCONTROLLER
         self.present(helpAlert, animated: true, completion: nil)
     }
-    
-    
-    
 }
 

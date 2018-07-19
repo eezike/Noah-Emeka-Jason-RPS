@@ -29,24 +29,24 @@ class HelpViewController: UIViewController {
     
     @IBAction func nextImage(_ sender: UIButton) {
         print("CurrentImg: \(String(currentImage))")
-        if(currentImage < images.count-1){
-            currentImage += 1
-            imageView.image = images[currentImage]
+        if(currentImage < images.count-1){ //not the last image
+            currentImage += 1 //adds one to current
+            imageView.image = images[currentImage] //displays
             
         }
         else if(currentImage == images.count - 1){
-            performSegue(withIdentifier: "goBack", sender: self)
+            performSegue(withIdentifier: "goBack", sender: self) //go back to the ViewController
         }
     }
     
     @IBAction func backImage(_ sender: UIButton) {
-        if(currentImage > 0){
-            currentImage -= 1
-            imageView.image = images[currentImage]
+        if(currentImage > 0){ //if its not the first image
+            currentImage -= 1 //move back
+            imageView.image = images[currentImage] //displays
             
         }
         else if(currentImage == 0){
-            performSegue(withIdentifier: "goBack", sender: self)
+            performSegue(withIdentifier: "goBack", sender: self) //goes back to the ViewController
         }
     }
 
